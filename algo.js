@@ -36,6 +36,8 @@ const checksumAlgo = {
 			data[offset + 9] = computed
 		}
 
+		// todo data[40] = ?
+
 		return data
 	},
 }
@@ -91,12 +93,13 @@ const languageAlgo = {
 const mileageAlgo = {
 	MILIAGE_IN_1_KM: 1.609344,
 	ADDR: 0x1D8,
+	COUNTS: 32,
 
 	getStatus(data) {
 		let summary = 0
 
 		let index = 0
-		while (index < 32) {
+		while (index < this.COUNTS) {
 			let val = data[this.ADDR + index*2] << 8
 			val = val + data[this.ADDR + index*2 + 1]
 			if (index % 2) {
@@ -112,8 +115,23 @@ const mileageAlgo = {
 	},
 
 	makeBetter(data) {
-		data[this.ADDR] = 0 // todo get from input
-		// todo
+		let newMileage = document.querySelector('#newMileageInput').value
+
+		newMileage = Math.round(newMileage / this.MILIAGE_IN_1_KM)
+		newMileage /= this.COUNTS
+
+		let index = 0
+		while (index < this.COUNTS) {
+			let val = newMileage
+			if (index % 2) {
+				val ^= 0xFFFF // инвертирование NOT
+			}
+			data[this.ADDR + index*2] = val >> 8
+			data[this.ADDR + index*2 + 1] = val & 0xFF
+
+			index++
+		}
+
 		return data
 	},
 }
