@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Honda Up</title>
+	<meta charset="UTF-8">
+	<script src="app.js"></script>
+    <script src="algo.js"></script>
+	<link rel="stylesheet" href="style.css"></link>
+</head>
+<body>
+	<h2>Honda Up</h2>
+
+    <p>
+        <input type="checkbox" id="swapHighLowCheckbox" checked="checked">
+        <label for="swapHighLowCheckbox">SWAP HIGH LOW</label>
+    </p>
+
+	<input type="file" id="inputFile" accept="application/octet-stream">
+
+    <p id="output"></p>
+
+
+    <p>
+        <input type="checkbox" id="languageCheckbox" checked="checked">
+        <label for="languageCheckbox">Русификация</label>
+    </p>
+
+    <p>
+        <input type="checkbox" id="temperatureCheckbox" checked="checked">
+        <label for="temperatureCheckbox">Темп. в Цельсиях</label>
+    </p>
+
+    <p>
+        <input type="checkbox" id="mileageCheckbox">
+        <label for="mileageCheckbox">Корректировка одометра</label>
+        <input type="number" value="000000" min="0"> km
+    </p>
+
+    <p>
+        <button id="applyBtn">Скачать с изменениями</button>
+    </p>
+</body>
+</html>
