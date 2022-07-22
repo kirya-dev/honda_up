@@ -18,16 +18,16 @@ const checksumAlgo = {
 			}
 			
 			if (data[offset + 8] !== computedParity) {
-				errors.push(`parity at: ${offset + 8} must be ${computedParity}`)
+				errors.push(`parity at: ${(offset + 8).toHex()} must be ${computedParity.toHex()}`)
 			}
 			if (data[offset + 9] !== computedXor) {
-				errors.push(`xor at: ${offset + 9} must be ${computedXor}`)
+				errors.push(`xor at: ${(offset + 9).toHex()} must be ${computedXor.toHex()}`)
 			}
 		}
 
 		const status = errors.length ? '<err>ERROR</err>' : '<ok>OK</ok>'
 
-		return `${status} ${status.join(', ')}`
+		return `${status} ${errors.join(', ')}`
 	},
 
 	recalc(data) {
