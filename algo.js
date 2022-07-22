@@ -5,40 +5,55 @@
 
 const checksumAlgo = {
 	getStatus(data) {
-		const reals = []
-		const computeds = []
+		const errors = []
 
-		// Каждый 10й байт - Контрольная сумма XOR
+		// Каждый 10й байт - Контрольная сумма XOR. Перед ней КС - бит четности
 		for (let offset of [0, 10, 20, 30]) {
-			reals.push(data[offset + 9].toHex())
+			let computedParity = 0
+			let computedXor = 0xFF
 
-			let computed = 0xFF
-			for (let byte of data.slice(offset, offset + 8)) {
-				computed ^= byte
+			for (let byte of data.slice(offset, offset + 8).reverse()) {
+				computedParity = (computedParity << 1) | this.calcParity(byte)
+				computedXor ^= byte
 			}
-
-			computeds.push(computed.toHex())
+			
+			if (data[offset + 8] !== computedParity) {
+				errors.push(`parity at: ${offset + 8} must be ${computedParity}`)
+			}
+			if (data[offset + 9] !== computedXor) {
+				errors.push(`xor at: ${offset + 9} must be ${computedXor}`)
+			}
 		}
 
-		const tag = isArrayEquals(reals, computeds) ? 'ok' : 'err'
+		const status = errors.length ? '<err>ERROR</err>' : '<ok>OK</ok>'
 
-		return `<${tag}>В файле ${reals.join(', ')}, Вычисл. ${computeds.join(', ')}</${tag}>`
+		return `${status} ${status.join(', ')}`
 	},
 
 	recalc(data) {
-		// Каждый 10й байт - Контрольная сумма XOR
 		for (let offset of [0, 10, 20, 30]) {
-			let computed = 0xFF
-			for (let byte of data.slice(offset, offset + 8)) {
-				computed ^= byte
+			let computedXor = 0xFF
+			let computedParity = 0
+			for (let byte of data.slice(offset, offset + 8).reverse()) {
+				computedParity = (computedParity << 1) | this.calcParity(byte)
+				computedXor ^= byte
 			}
 
-			data[offset + 9] = computed
+			data[offset + 8] = computedParity
+			data[offset + 9] = computedXor
 		}
 
-		// todo data[40] = ?
-
 		return data
+	},
+
+	calcParity(byte) {
+		let numberOfTrue = 0
+		while (byte) {
+			numberOfTrue += byte & 1
+			byte = byte >> 1
+		}
+
+		return numberOfTrue % 2
 	},
 }
 
