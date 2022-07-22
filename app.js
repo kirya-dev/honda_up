@@ -39,13 +39,16 @@ function init() {
 
 	applyBtn.addEventListener('click', () => {
 		const SERVICES = {
-			language: languageAlgo, 
+			checksum: checksumAlgo,
+			language: languageAlgo,
 			temperature: temperatureAlgo,
 			mileage: mileageAlgo,
 		}
-		for (let checkboxId of Object.keys(SERVICES)) {
-			if (document.querySelector(`#${checkboxId}Checkbox`).checked) {
-				data = SERVICES[checkboxId].makeBetter(data)
+		for (let wrapperId of Object.keys(SERVICES)) {
+			const wrapper = document.querySelector(`#${wrapperId}Wrapper`)
+
+			if (wrapper.querySelector(`input[type=checkbox]`).checked) {
+				data = SERVICES[wrapperId].makeBetter(data)
 			}
 		}
 
@@ -59,11 +62,23 @@ function init() {
 }
 
 function initWithData(data) {
-	output.innerHTML = 'Контрольная сумма: ' + checksumAlgo.getStatus(data)
-	output.innerHTML+= '<br>Ед. изм. температуры: ' + temperatureAlgo.getStatus(data)
-	output.innerHTML+= '<br>Язык: ' + languageAlgo.getStatus(data)
-	output.innerHTML+= '<br>Пробег: ' + mileageAlgo.getStatus(data)
-	output.innerHTML+= '<br>P/N: ' + partNumberAlgo.getStatus(data)
+	const SERVICES = {
+		checksum: checksumAlgo,
+		language: languageAlgo,
+		temperature: temperatureAlgo,
+		mileage: mileageAlgo,
+		partNumber: partNumberAlgo,
+	}
+
+	for (let wrapperId of Object.keys(SERVICES)) {
+		const status = SERVICES[wrapperId].getStatus(data)
+
+		const wrapper = document.querySelector(`#${wrapperId}Wrapper`)
+		wrapper.style.display = 'block'
+		wrapper.innerHTML = `<status>${status}</status> ${wrapper.innerHTML}`
+	}
+
+	document.querySelector(`#applyWrapper`).style.display = 'block'
 }
 
 

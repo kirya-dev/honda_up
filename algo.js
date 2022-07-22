@@ -25,12 +25,14 @@ const checksumAlgo = {
 			}
 		}
 
-		const status = errors.length ? '<err>ERROR</err>' : '<ok>OK</ok>'
-
-		return `${status} ${errors.join(', ')}`
+		if (errors.length) {
+			return `<err>ERROR</err><br/><small>${errors.join('<br/>')}</small>`
+		}
+	
+		return '<ok>OK</ok>'
 	},
 
-	recalc(data) {
+	makeBetter(data) {
 		for (let offset of [0, 10, 20, 30]) {
 			let computedXor = 0xFF
 			let computedParity = 0
@@ -75,7 +77,7 @@ const temperatureAlgo = {
 	makeBetter(data) {
 		data[this.ADDR] = 0x69
 
-		return checksumAlgo.recalc(data)
+		return data
 	},
 }
 
@@ -100,7 +102,7 @@ const languageAlgo = {
 		data[this.ADDR_0] = 0x55
 		data[this.ADDR_1] = 0x01
 
-		return checksumAlgo.recalc(data)
+		return data
 	},
 }
 
@@ -170,7 +172,7 @@ const partNumberAlgo = {
 			pn1.slice(7, 9).toASCII(), // под версия. не является частью PN
 		]
 
-		return `<ok>${pn.join('-')}</ok>`
+		return `<small>P/N</small> <ok>${pn.join('-')}</ok>`
 	},
 }
 

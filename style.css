@@ -5,11 +5,34 @@ body {
 	font-family: Arial;
 }
 
+status {
+	display: inline-block;
+	width: 250px;
+}
+
 ok {
 	color: #00ec00;
 }
 
-
 err {
 	color: red;
+}
+
+br {
+	margin-bottom: 0.1em;
+}
+
+p[id*=Wrapper] {
+	display: none;
+    padding-bottom: 5px;
+    width: 450px;
+}
+
+p[id*=Wrapper]:not(:last-child) {
+    border-bottom: 1px solid #3f3f3f;
+}
+
+
+input[type=number] {
+	width: 100px;
 }
