@@ -39,10 +39,10 @@ function init() {
 
 	applyBtn.addEventListener('click', () => {
 		const SERVICES = {
-			checksum: checksumAlgo,
 			language: languageAlgo,
 			temperature: temperatureAlgo,
 			mileage: mileageAlgo,
+			checksum: checksumAlgo, // Обязательно в конце вычисление КС
 		}
 		for (let wrapperId of Object.keys(SERVICES)) {
 			const wrapper = document.querySelector(`#${wrapperId}Wrapper`)
